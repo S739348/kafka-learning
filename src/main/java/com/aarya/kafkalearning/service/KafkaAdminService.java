@@ -18,6 +18,7 @@ public class KafkaAdminService {
 
     private final AdminClient adminClient;
     private final KafkaListenerEndpointRegistry listenerRegistry;
+
     public KafkaAdminService(AdminClient adminClient, KafkaListenerEndpointRegistry listenerRegistry) {
         this.adminClient = adminClient;
         this.listenerRegistry = listenerRegistry;
@@ -64,7 +65,7 @@ public class KafkaAdminService {
                 .get(topicName).get();
 
         Map<String, Object> info = new LinkedHashMap<>();
-        info.put("name",           description.name());
+        info.put("name", description.name());
         info.put("partitionCount", description.partitions().size());
 
         // partition details
@@ -72,10 +73,10 @@ public class KafkaAdminService {
         for (TopicPartitionInfo p : description.partitions()) {
             Map<String, Object> pInfo = new LinkedHashMap<>();
             pInfo.put("partition", p.partition());
-            pInfo.put("leader",    p.leader().id());
-            pInfo.put("replicas",  p.replicas().stream()
+            pInfo.put("leader", p.leader().id());
+            pInfo.put("replicas", p.replicas().stream()
                     .map(Node::id).toList());
-            pInfo.put("isr",       p.isr().stream()
+            pInfo.put("isr", p.isr().stream()
                     .map(Node::id).toList());
             partitions.add(pInfo);
         }
@@ -163,17 +164,17 @@ public class KafkaAdminService {
             Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
 
             for (Map.Entry<TopicPartition, OffsetAndMetadata> entry : offsets.entrySet()) {
-                TopicPartition tp      = entry.getKey();
-                long committedOffset   = entry.getValue().offset();
-                long endOffset         = endOffsets.getOrDefault(tp, 0L);
-                long lag               = endOffset - committedOffset;
+                TopicPartition tp = entry.getKey();
+                long committedOffset = entry.getValue().offset();
+                long endOffset = endOffsets.getOrDefault(tp, 0L);
+                long lag = endOffset - committedOffset;
 
                 Map<String, Object> pInfo = new LinkedHashMap<>();
-                pInfo.put("topic",           tp.topic());
-                pInfo.put("partition",        tp.partition());
-                pInfo.put("committedOffset",  committedOffset);
-                pInfo.put("endOffset",        endOffset);
-                pInfo.put("lag",              lag);
+                pInfo.put("topic", tp.topic());
+                pInfo.put("partition", tp.partition());
+                pInfo.put("committedOffset", committedOffset);
+                pInfo.put("endOffset", endOffset);
+                pInfo.put("lag", lag);
                 partitionDetails.add(pInfo);
 
                 log.info("Group={} Topic={} Partition={} Lag={}",
@@ -181,7 +182,7 @@ public class KafkaAdminService {
             }
         }
 
-        result.put("groupId",    groupId);
+        result.put("groupId", groupId);
         result.put("partitions", partitionDetails);
         return result;
     }

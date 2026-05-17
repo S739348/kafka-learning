@@ -40,6 +40,5 @@ public class OrderConsumer {
 
     private void processOrder(Order order) {
         log.info("Processing -> item={} qty={}", order.getItem(), order.getQty());
-        // your business logic here
     }
 }

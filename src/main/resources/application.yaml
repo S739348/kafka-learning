@@ -26,3 +26,4 @@ spring:
 app:
   topic:
     orders: orders
+    orders-dlq: orders-dlq
